@@ -1,0 +1,15 @@
+0.25,-0.5,-2.0,2.0,2.0,0.0,2.25,-1.75,2.0,3.5,1.0,-0.5,0.75,-0.25,-0.5,-0.5,-0.25,-0.5,1.75,-2.0,0.25,-3.0,0.75,2.0,-1.25,0.25,-0.5,-0.75,-0.5,0.25
+numHidden 	3
+numGenes 	30
+minGene 	0.0
+maxGene 	0.0
+popSize 	200
+maxEvaluations 	20000
+selectionSize 	80
+mutateRate 	0.6
+mutateChange 	0.25
+seed 	1586437297561
+random 	java.util.Random@1e6f0cd9
+neuralNetworkClass 	class coursework.ExampleHillClimber
+Training Set Training
+Fitness 0.012347818628735652

@@ -33,21 +33,14 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 		 */		
 		
 		while (evaluations < Parameters.maxEvaluations) {
+			// Select 2 Individuals from the current population
+			Individual parent1 = select(true);
+			Individual parent2 = select(false);
+			Individual parent3 = select(false); // Started using elite + elite and non-elite + non-elite
 
-			/**
-			 * this is a skeleton EA - you need to add the methods.
-			 * You can also change the EA if you want 
-			 * You must set the best Individual at the end of a run
-			 * 
-			 */
+			// Generate a child by crossover. Not Implemented
+			ArrayList<Individual> children = reproduce(parent1, parent2, parent3);
 
-			// Select 2 Individuals from the current population. Currently returns random Individual
-			Individual parent1 = select(); 
-			Individual parent2 = select();
-
-			// Generate a child by crossover. Not Implemented			
-			ArrayList<Individual> children = reproduce(parent1, parent2);			
-			
 			//mutate the offspring
 			mutate(children);
 			
@@ -118,11 +111,17 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	 * Selection -- Tournament Selection
 	 * Parameters: Tournament Size
 	 */
-	private Individual select() {
+	private Individual select(boolean elite) {
 		ArrayList<Individual> selection = new ArrayList<>();
 
+		int temp;
 		// Randomly selecting population members
-		for (int i = 0; i < Parameters.selectionSize; i++){
+		if (elite){
+			temp = Parameters.eliteSelectionSize;
+		}else{
+			temp = Parameters.selectionSize;
+		}
+		for (int i = 0; i < temp; i++){
 			selection.add(population.get(Parameters.random.nextInt(Parameters.popSize)));
 		}
 		Individual parent = selection.get(0);
@@ -138,26 +137,31 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	                                                                                  
 	/**
 	 * Crossover / Reproduction
+	 * Parent 1 and 2 (elite/non-elite) have 2-point crossover
+	 * Parent 1 and 3 (elite/non-elite) have arithmetic crossover
 	 */
-	private ArrayList<Individual> reproduce(Individual parent1, Individual parent2) {
+	private ArrayList<Individual> reproduce(Individual parent1, Individual parent2, Individual parent3) {
+
 		ArrayList<Individual> children = new ArrayList<>();
-
-		// If parent 1 and parent 2 are the same, selects a new parent from the population
-		while (parent1 == parent2){
-			parent2 = select();
-		}
 		children.add(parent1.copy());
-		children.add(parent2.copy());
+		children.add(parent1.copy());
 
-		double temp;
-		int rand = Parameters.random.nextInt(parent1.chromosome.length + 1);
-		System.out.println(rand);
+		// Two Point Crossover
+		int rand = Parameters.random.nextInt(parent1.chromosome.length);
+		int rand2;
+		do{ // Ensuring rand2 is bigger than rand
+			rand2 = Parameters.random.nextInt(parent1.chromosome.length + 1);
+		}
+		while (rand <= rand2);
 
-		// 1pt crossover
-		for (int i = 0; i < rand; i++){
-			temp = children.get(0).chromosome[i];
-			children.get(0).chromosome[i] = children.get(1).chromosome[i];
-			children.get(1).chromosome[i] = temp;
+		for (int i = rand; i < rand2; i++){ // Crossover
+			children.get(0).chromosome[i] = parent2.chromosome[i];
+		}
+
+		// Arithmetic Crossover
+		for (int i = 0; i< parent1.chromosome.length; i++){
+			children.get(1).chromosome[i] += parent3.chromosome[i];
+			children.get(1).chromosome[i] = children.get(1).chromosome[i] / 2;
 		}
 
 		return children;
@@ -171,13 +175,27 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	private void mutate(ArrayList<Individual> individuals) {
 		for(Individual individual : individuals){
 			for (int i = 0; i < individual.chromosome.length; i++) {
-				if (Parameters.random.nextDouble() < Parameters.mutateRate){
-					if (Parameters.random.nextBoolean()) {
-						individual.chromosome[i] += (Parameters.mutateChange);
-					} else {
-						individual.chromosome[i] -= (Parameters.mutateChange);
+				//if (Parameters.random.nextDouble() < Parameters.mutateRate){ 				// If mutate
+					if (individual.chromosome[i] > 0){ 										// If chromosone[i] > 0
+						if (Parameters.random.nextDouble() < 0.55){							// Tends to push higher if > 0
+							individual.chromosome[i] -= (Parameters.mutateChange * Parameters.random.nextDouble());
+						}else{																// 0.4 chance of decreasing
+							individual.chromosome[i] += (Parameters.mutateChange * Parameters.random.nextDouble());
+						}
+					}else if (individual.chromosome[i] < 0){ 								// If chromosone[i] < 0
+						if (Parameters.random.nextDouble() < 0.55){							// Tends to push lower if < 0
+							individual.chromosome[i] += (Parameters.mutateChange * Parameters.random.nextDouble());
+						}else{
+							individual.chromosome[i] -= (Parameters.mutateChange * Parameters.random.nextDouble());
+						}
+					}else{ // If mutation is 0
+						if (Parameters.random.nextBoolean()) {
+							individual.chromosome[i] += (Parameters.mutateChange * Parameters.random.nextDouble());
+						} else {
+							individual.chromosome[i] -= (Parameters.mutateChange * Parameters.random.nextDouble());
+						}
 					}
-				}
+				//}
 			}
 		}
 	}
