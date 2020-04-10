@@ -13,23 +13,23 @@ public class Parameters {
 	 * You may add other Parameters as required to this class 
 	 * 
 	 */
-	private static int numHidden = 6; // was3
+	private static int numHidden = 8; // 6 or 8
 	private static int numGenes = calculateNumGenes();
 	public static double minGene = 0; // specifies minimum and maximum weight values
 	public static double maxGene = 0;
 		
-	public static int popSize = 200; // was 40 - 200 in final test
-	public static int maxEvaluations = 20000; // 20,000 in final test
+	public static int popSize = 200;
+	public static int maxEvaluations = 20000;
 
 	// Parameters for selection - my own
-	public static int eliteSelectionSize = 40;
-	public static int selectionSize = 5;
+	public static int eliteSelectionSize = 50;
+	public static int selectionSize = 8;
 	
 	// Parameters for mutation 
 	// Rate = probability of changing a gene
 	// Change = the maximum +/- adjustment to the gene value
-	public static double mutateRate = 0.6; // mutation rate for mutation operator - was 0.04 / 0.05 / .08
-	public static double mutateChange = 0.5; // delta change for mutation operator - was 0.1 / 0.16 / .1
+	public static double mutateRate = 1; // mutation rate for mutation operator
+	public static double mutateChange = 0.5; // delta change for mutation operator
 	
 	//Random number generator used throughout the application
 	public static long seed = System.currentTimeMillis();

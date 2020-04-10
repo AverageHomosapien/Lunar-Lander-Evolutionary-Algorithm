@@ -38,7 +38,7 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 			Individual parent2 = select(false);
 			Individual parent3 = select(false); // Started using elite + elite and non-elite + non-elite
 
-			// Generate a child by crossover. Not Implemented
+			// Generate a child by crossover
 			ArrayList<Individual> children = reproduce(parent1, parent2, parent3);
 
 			//mutate the offspring
@@ -109,7 +109,7 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 
 	/**
 	 * Selection -- Tournament Selection
-	 * Parameters: Tournament Size
+	 * Parameters: Elite Selection Size and Normal Selection Size
 	 */
 	private Individual select(boolean elite) {
 		ArrayList<Individual> selection = new ArrayList<>();
@@ -163,7 +163,6 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 			children.get(1).chromosome[i] += parent3.chromosome[i];
 			children.get(1).chromosome[i] = children.get(1).chromosome[i] / 2;
 		}
-
 		return children;
 	} 
 	
@@ -174,28 +173,26 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	 */
 	private void mutate(ArrayList<Individual> individuals) {
 		for(Individual individual : individuals){
-			for (int i = 0; i < individual.chromosome.length; i++) {
-				//if (Parameters.random.nextDouble() < Parameters.mutateRate){ 				// If mutate
-					if (individual.chromosome[i] > 0){ 										// If chromosone[i] > 0
-						if (Parameters.random.nextDouble() < 0.55){							// Tends to push higher if > 0
-							individual.chromosome[i] -= (Parameters.mutateChange * Parameters.random.nextDouble());
-						}else{																// 0.4 chance of decreasing
-							individual.chromosome[i] += (Parameters.mutateChange * Parameters.random.nextDouble());
-						}
-					}else if (individual.chromosome[i] < 0){ 								// If chromosone[i] < 0
-						if (Parameters.random.nextDouble() < 0.55){							// Tends to push lower if < 0
-							individual.chromosome[i] += (Parameters.mutateChange * Parameters.random.nextDouble());
-						}else{
-							individual.chromosome[i] -= (Parameters.mutateChange * Parameters.random.nextDouble());
-						}
-					}else{ // If mutation is 0
-						if (Parameters.random.nextBoolean()) {
-							individual.chromosome[i] += (Parameters.mutateChange * Parameters.random.nextDouble());
-						} else {
-							individual.chromosome[i] -= (Parameters.mutateChange * Parameters.random.nextDouble());
-						}
+			for (int i = 0; i < individual.chromosome.length; i++) {					// Always mutates
+				if (individual.chromosome[i] > 0){ 										// If chromosone[i] > 0
+					if (Parameters.random.nextDouble() < 0.55){							// Tends to push higher if > 0
+						individual.chromosome[i] -= (Parameters.mutateChange * Parameters.random.nextDouble());
+					}else{																// 0.4 chance of decreasing
+						individual.chromosome[i] += (Parameters.mutateChange * Parameters.random.nextDouble());
 					}
-				//}
+				}else if (individual.chromosome[i] < 0){ 								// If chromosone[i] < 0
+					if (Parameters.random.nextDouble() < 0.55){							// Tends to push lower if < 0
+						individual.chromosome[i] += (Parameters.mutateChange * Parameters.random.nextDouble());
+					}else{
+						individual.chromosome[i] -= (Parameters.mutateChange * Parameters.random.nextDouble());
+					}
+				}else{ // If mutation is 0
+					if (Parameters.random.nextBoolean()) {
+						individual.chromosome[i] += (Parameters.mutateChange * Parameters.random.nextDouble());
+					} else {
+						individual.chromosome[i] -= (Parameters.mutateChange * Parameters.random.nextDouble());
+					}
+				}
 			}
 		}
 	}
