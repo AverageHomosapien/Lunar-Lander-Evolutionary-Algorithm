@@ -8,6 +8,7 @@ We were given the task of creating an evolutionary algorithm which evolved the w
 to allow spaceships to land safely.
 
 I give an example screenshot of the game environment below:
+
 ![lunar-lander-game-environment](https://github.com/AverageHomosapien/Lunar-Lander-Evolutionary-Algorithm/blob/master/LatexTemplate/lunar-lander-example.png)
 
 I used a unique approach, using mutation as an exploration and exploitation operator and was able to achieve solid results for the task.
